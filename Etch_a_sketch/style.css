@@ -1,0 +1,24 @@
+
+:root {
+    --gridjs: 900px;
+    --gridbg: rgb(0,0,0);
+}
+main{
+    max-height: 100vh;
+}
+#container{
+    margin-top: 10px;
+    border: 0.3px solid black;
+    display: flex;
+    flex-wrap: wrap;
+    width: 600px;
+    max-height: 80vh;
+}
+#minhaid{
+    background-color: var(--gridbg);
+    opacity: 0;
+    width: calc(600px / var(--gridjs));
+    height: calc(80vh  / var(--gridjs));
+    transition: opacity 0.2s;
+}
+
