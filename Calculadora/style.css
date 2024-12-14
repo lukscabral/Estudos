@@ -1,0 +1,22 @@
+*{
+    padding: 0;
+    border-radius: border-box;
+}
+#container{
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+button{
+    width: 50px;
+    height:50px;
+}
+#tela{
+    height: 40px;
+    width: 200px;
+}
+span{
+    visibility:hidden;
+    color: red;
+}
