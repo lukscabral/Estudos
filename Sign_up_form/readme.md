@@ -3,9 +3,9 @@
 
 # Sign up form
 
-Clone de uma página de criação de conta de um serviço imaginario a partir de um arquivo de design.
+Clone de uma página de criação de conta de um serviço imaginario a partir de um arquivo de design do https://www.theodinproject.com/
 
 ## Tecnologias usadas 
 
--CSS
--HTML
+- CSS
+- HTML
