@@ -7,6 +7,37 @@
     <title>Biblioteca</title>
 </head>
 <body>
+    <main>
+        <dialog id="dialog">
+            <form method="dialog">
+              <p>
+                <label for="">Titulo</label>
+                <input type="text" id="titulo" placeholder="titulo" required>
+              </p>
+              <p>
+                <label for="">Autor:</label>
+                <input type="text" id="autor" placeholder="autor" required>
+              </p>
+                <p>
+                    <label for="">Paginas:</label>
+                    <input type="text" id="paginas" placeholder="paginas" required>
+                </p>
+              <div>
+                <button type="submit" id="criar">Criar</button>
+                <input type="submit" id="js-close" value="JS close" />
+              </div>
+            </form>
+          </dialog>
+          <p>
+            <button id="show-dialog">Show the dialog</button>
+          </p>
+          <output></output>
+        <article id="livros">
+            
+                <!-- cards dinamicos atraves de js -->
+            
+        </article>
+    </main>
     <script src="script.js"></script>
 </body>
 </html>
