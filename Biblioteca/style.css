@@ -3,11 +3,60 @@
     margin: 0;
     box-sizing: border-box;
 }
-#livros{
+main{
     display: flex;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
+}
+#livros{
+    width: min(754px,50vw);
+    display: flex;
+    flex-wrap: wrap;
+
 }
 .card{
     border:1px solid black;
-    width: 200px;
-    height: 200px;
+    width: 250px;
+    min-width: 236px;
+    height: 250px;
+    font-size: 1.2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.card p,.card h3,.card button {
+    padding: 0.5em;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    width: 40vw;
+    
+}
+form p {
+    display: flex;
+    justify-content: space-between;
+    height: 2em;
+}
+form input{
+    width: 90%;
+}
+form label{
+    width: 10%;
+}
+form button {
+    padding: 1em;
+    width: 49%;
+}
+.card > div {
+    display: flex;
+}
+.info {
+    flex-direction: column;
+    
+}
+dialog ~ p button {
+    padding:1em;
+    width: clamp( 250px, 40vw, 754px);
 }
