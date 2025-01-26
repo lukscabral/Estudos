@@ -10,10 +10,20 @@
     <title>Jogo da velha</title>
 </head>
 <body>
-    <h1>Jogo da velha</h1>
+    
     <div class="container">
-        
+        <h1>Jogo da velha</h1>
+        <p>
+            <label for="jogador1">Jogador 1</label>
+            <input type="text" id="jogador1" name="jogador1">
+        </p>
+        <p>
+            <label for="jogador2">Jogador 2</label>
+            <input type="text" name="Jogador2" id="Jogador2">
+        </p>
+        <button class="reiniciar">Restart</button>
         <h2 class="turno"></h2>
+        <h2 class="vencedor"></h2>
         <div class="tabuleiro"></div>
     </div>
     <script src="script.js"></script>

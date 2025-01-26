@@ -6,7 +6,6 @@ function tabuleiro_do_jogo(){
     for(let i=0;i < fileiras;i++){
         tabuleiro[i] = [];
         for(let j=0;j < colunas;j++){
-            //adicionar x e o ao array
             tabuleiro[i].push(celula());
         }
     }
@@ -16,13 +15,7 @@ function tabuleiro_do_jogo(){
     const colocar_token_celula = (fileira,coluna,jogador) =>{   
                 tabuleiro[fileira][coluna].pegar_token(jogador);
     };
-
-    const imprimir_tabuleiro = () => { //percorre os arrays e recupera os valores das celulas
-        const tabuleiro_com_valores = tabuleiro.map((fileira) => fileira.map((celula) => celula.pegar_valor()));
-        console.log(tabuleiro_com_valores);
-    };
-
-    return { pegar_tabuleiro, colocar_token_celula, imprimir_tabuleiro };
+    return { pegar_tabuleiro, colocar_token_celula };
 }
 
 function celula(){
@@ -54,10 +47,13 @@ function game_controller(
         {
             nome: jogador2_nome,
             token:2
-        }
+        },
     ];
 
     let jogador_ativo = jogadores[0];
+    let resultado = { vencedor: null};
+
+    const pegar_resultado = () => resultado; //pegar o vencedor
 
     const troca_turno_jogador = () => {
         jogador_ativo = jogador_ativo === jogadores[0] ? jogadores[1] : jogadores[0];
@@ -65,19 +61,16 @@ function game_controller(
 
     const pegar_jogador_ativo = () => jogador_ativo;
 
-    const imprimir_nova_rodada = () => {
-        tabuleiro.imprimir_tabuleiro();
-        console.log(`turno do ${pegar_jogador_ativo().nome}`);
-    };
+    const checar_vencedor = (tabuleiro_real) => {
+        const fileiras = tabuleiro_real.map((fileira) => 
+            fileira.map((celula) => celula.pegar_valor()));
 
-    const checar_vencedor = (tabuleiro) => {
-        const fileiras = tabuleiro.map((fileira) => fileira.map((celula) => celula.pegar_valor()));
-
-        const colunas = Array.from({length: 3}, (_, i) => fileiras.map((fileira) => fileira[i]));
+        const colunas = Array.from({length: 3}, (_, i) => 
+            fileiras.map((fileira) => fileira[i]));
 
         const diagonais = [
-            [tabuleiro[0][0].pegar_valor(), tabuleiro[1][1].pegar_valor(), tabuleiro[2][2].pegar_valor()],
-            [tabuleiro[0][2].pegar_valor(), tabuleiro[1][1].pegar_valor(), tabuleiro[2][0].pegar_valor()],
+            [fileiras[0][0], fileiras[1][1], fileiras[2][2]],
+            [fileiras[0][2], fileiras[1][1], fileiras[2][0]],
         ];
         
         const combinacoes_possiveis = [...fileiras, ...colunas, ...diagonais];
@@ -87,50 +80,47 @@ function game_controller(
                 return combinacao[0];  
             }
         }
-        return null
+        return null;
     }
 
-    const checar_empate = (tabuleiro) => {
-        return tabuleiro.every((fileira) => fileira.every((celula) => celula.pegar_valor() !== 0));
+    const checar_empate = () => {
+        const tabuleiro_real = tabuleiro.pegar_tabuleiro();
+        return tabuleiro_real.every((fileira) => 
+            fileira.every((celula) => celula.pegar_valor() !== 0));
     };
 
     const jogar_rodada = (fileira,coluna) => {
-        console.log(`colocando a ficha do ${pegar_jogador_ativo().nome} na celula ${fileira +", "+ coluna}...`);
+
+        if(resultado.vencedor){
+            return;
+        }
 
         const tabuleiro_real = tabuleiro.pegar_tabuleiro();
         const celulaxy = tabuleiro_real[fileira][coluna]; //pega coord da celula
         
         if(celulaxy.pegar_valor() !== 0) {//se nao tiver vazia volta jogada pro msm player
-            console.log('celula ocupada!');
-            return imprimir_nova_rodada();
+            return;
         }
 
-        tabuleiro.colocar_token_celula(fileira,coluna,pegar_jogador_ativo().token);
+        tabuleiro.colocar_token_celula(fileira,coluna, jogador_ativo.token);
         
         const vencedor = checar_vencedor(tabuleiro_real);
 
         if(vencedor) {
-            console.log(`Parabéns! ${jogadores.find((jogador) => jogador.token === vencedor).nome} venceu!`);
-            tabuleiro.imprimir_tabuleiro();
+            resultado.vencedor = vencedor;           
             return;
         }
 
-        if(checar_empate(tabuleiro_real)) {
-            console.log("Empate! O tabuleiro está cheio.");
-            tabuleiro.imprimir_tabuleiro();
+        if(checar_empate()) {
             return;
         }
-
         troca_turno_jogador();
-        imprimir_nova_rodada();
     };
-
-    imprimir_nova_rodada();
-
     return {
+        pegar_resultado,
         jogar_rodada,
         pegar_jogador_ativo,
-        pegar_tabuleiro: tabuleiro.pegar_tabuleiro   
+        pegar_tabuleiro: tabuleiro.pegar_tabuleiro, 
     };
 };
 
@@ -140,41 +130,53 @@ function screen_controller() {
     const tabuleiro_div = document.querySelector('.tabuleiro');
 
     const atualizar_tela = () => {
-
-        tabuleiro_div.textContent = "";
-
         const tabuleiro = jogo.pegar_tabuleiro();
+        const resultado_jogo = jogo.pegar_resultado();
         const jogador_ativo = jogo.pegar_jogador_ativo();
 
-        turno_jogador_div.textContent = `Turno do ${jogador_ativo.nome}...` ;
-
-        tabuleiro.forEach(fileira => { 
-            fileira.forEach((celula,index) => {
-                const celula_btn = document.createElement("button");
-                celula_btn.classList.add("celula");
+        tabuleiro.forEach((fileira, index_fileira) => { 
+            fileira.forEach((celula, index_coluna) => {
+                let celula_btn = document.querySelector(
+                    `.celula[data-row="${index_fileira}"][data-column="${index_coluna}"]`
+                );
+                if(!celula_btn){
+                    celula_btn = document.createElement("button");
+                    celula_btn.classList.add("celula");
+                    celula_btn.dataset.row = index_fileira;
+                    celula_btn.dataset.column = index_coluna;
+                    tabuleiro_div.appendChild(celula_btn);  
+                }
+                
                 //atribuindo atributo data xy
-                celula_btn.dataset.row = tabuleiro.indexOf(fileira);
-                celula_btn.dataset.column = index ; 
-                celula_btn.textContent = celula.pegar_valor();
-                tabuleiro_div.appendChild(celula_btn);  
-                })
-            })
+                celula_btn.textContent = celula.pegar_valor() || "";
+                });
+            });   
+
+            if(resultado_jogo.vencedor) {
+                const jogador_vencedor = jogador_ativo;//
+                turno_jogador_div.textContent = `Parabens! ${jogador_vencedor.nome} venceu!`
+                
+                //ta por aqui o erro kkkkkkkk
+                return;
+            }   
+
+            turno_jogador_div.textContent = `Turno do ${jogador_ativo.nome}...` ;
         }
-
-    function tabuleiro_clicavel(e) {
-        const fileira_selecionada = e.target.dataset.row;
-        const coluna_selecionada = e.target.dataset.column;
         
-        if( fileira_selecionada === undefined || coluna_selecionada === undefined) return;//evitar click entre as celulas
+    tabuleiro_div.addEventListener("click", (e) => {
+        const resultado_jogo = jogo.pegar_resultado();
+        if(resultado_jogo.vencedor) return;//n permite mais click
 
-        jogo.jogar_rodada(parseInt(fileira_selecionada), parseInt(coluna_selecionada));
+        const fileira_selecionada = parseInt(e.target.dataset.row,10);
+        const coluna_selecionada = parseInt(e.target.dataset.column, 10);
+        
+        if (isNaN(fileira_selecionada) || isNaN(coluna_selecionada)) return;
+
+        jogo.jogar_rodada(fileira_selecionada, coluna_selecionada);
         atualizar_tela();
-    }
-
-    tabuleiro_div.addEventListener("click", tabuleiro_clicavel);
+    });
 
     atualizar_tela();
-
 }
 
 screen_controller();
