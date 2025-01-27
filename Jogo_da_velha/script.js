@@ -10,7 +10,7 @@ function tabuleiro_do_jogo(){
         }
     }
 
-    const pegar_tabuleiro = () => tabuleiro ;// usado pra recuperar o array do tabuleiro usando closure
+    const pegar_tabuleiro = () => tabuleiro;
 
     const colocar_token_celula = (fileira,coluna,jogador) =>{   
                 tabuleiro[fileira][coluna].pegar_token(jogador);
@@ -20,7 +20,6 @@ function tabuleiro_do_jogo(){
 
 function celula(){
     let valor = 0;
-
     const pegar_token = (jogador) => { //adiciona o valor do token
         valor = jogador;
     };
@@ -34,19 +33,18 @@ function celula(){
 }
 
 function game_controller(
-    jogador1_nome = "Jogador 1", //prompt("Digite o nome do jogador 1"),
-    jogador2_nome = "Jogador 2"
+    jogador1_nome = 'Jogador 1',
+    jogador2_nome = 'Jogador 2'
 ) {
-    const tabuleiro = tabuleiro_do_jogo();
-
+    const tabuleiro = tabuleiro_do_jogo();  
     const jogadores = [
         {
             nome: jogador1_nome,
-            token:1
+            token:'X'
         },
         {
             nome: jogador2_nome,
-            token:2
+            token:'O'
         },
     ];
 
@@ -85,6 +83,7 @@ function game_controller(
 
     const checar_empate = () => {
         const tabuleiro_real = tabuleiro.pegar_tabuleiro();
+        console.log("empate");
         return tabuleiro_real.every((fileira) => 
             fileira.every((celula) => celula.pegar_valor() !== 0));
     };
@@ -96,9 +95,9 @@ function game_controller(
         }
 
         const tabuleiro_real = tabuleiro.pegar_tabuleiro();
-        const celulaxy = tabuleiro_real[fileira][coluna]; //pega coord da celula
+        const celulaxy = tabuleiro_real[fileira][coluna];
         
-        if(celulaxy.pegar_valor() !== 0) {//se nao tiver vazia volta jogada pro msm player
+        if(celulaxy.pegar_valor() !== 0) {
             return;
         }
 
@@ -146,8 +145,6 @@ function screen_controller() {
                     celula_btn.dataset.column = index_coluna;
                     tabuleiro_div.appendChild(celula_btn);  
                 }
-                
-                //atribuindo atributo data xy
                 celula_btn.textContent = celula.pegar_valor() || "";
                 });
             });   
@@ -155,8 +152,6 @@ function screen_controller() {
             if(resultado_jogo.vencedor) {
                 const jogador_vencedor = jogador_ativo;//
                 turno_jogador_div.textContent = `Parabens! ${jogador_vencedor.nome} venceu!`
-                
-                //ta por aqui o erro kkkkkkkk
                 return;
             }   
 
@@ -165,7 +160,7 @@ function screen_controller() {
         
     tabuleiro_div.addEventListener("click", (e) => {
         const resultado_jogo = jogo.pegar_resultado();
-        if(resultado_jogo.vencedor) return;//n permite mais click
+        if(resultado_jogo.vencedor) return;//nao permite mais click
 
         const fileira_selecionada = parseInt(e.target.dataset.row,10);
         const coluna_selecionada = parseInt(e.target.dataset.column, 10);
@@ -178,5 +173,4 @@ function screen_controller() {
 
     atualizar_tela();
 }
-
 screen_controller();

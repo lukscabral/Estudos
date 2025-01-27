@@ -6,11 +6,13 @@
 
 h1{
     font-family: "Henny Penny", serif;
+    
 }
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color:rgb(0, 38, 255);
 }
 .tabuleiro {
     display: grid;
@@ -23,20 +25,31 @@ h1{
     padding: 2px;
     background-color: rgb(0, 38, 255);
   }
-.tabuleiro.fim-de-jogo {
-  pointer-events: none; /* Desativa cliques */
-  opacity: 0.5; /* Mostra visualmente que está desativado */
-}
+
 .celula {
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 2rem;
+  font-size: 3rem;
   border: 1px solid black;
   background: rgb(224, 254, 255);
   cursor: pointer;
 }
 .celula:hover {
-  background: rgb(182, 243, 245); /* Feedback ao passar o mouse */
+  background: rgb(182, 243, 245); 
+}
+
+#start{
+  font-size: 1.2em;
+  width: 150px;
+  padding: 1em;
+  background-color: rgb(224, 254, 255);
+  
+}
+#start:hover {
+  background-color: rgb(151, 235, 238);
+  border: 2px solid rgb(0, 38, 255);
+  border-radius: 25px;
+  transition: all .3s ease-in-out ;
 }
