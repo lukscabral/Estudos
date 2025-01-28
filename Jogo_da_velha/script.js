@@ -83,7 +83,6 @@ function game_controller(
 
     const checar_empate = () => {
         const tabuleiro_real = tabuleiro.pegar_tabuleiro();
-        console.log("empate");
         return tabuleiro_real.every((fileira) => 
             fileira.every((celula) => celula.pegar_valor() !== 0));
     };
@@ -111,6 +110,7 @@ function game_controller(
         }
 
         if(checar_empate()) {
+            resultado.vencedor = "empate"
             return;
         }
         troca_turno_jogador();
@@ -150,8 +150,11 @@ function screen_controller() {
             });   
 
             if(resultado_jogo.vencedor) {
-                const jogador_vencedor = jogador_ativo;//
-                turno_jogador_div.textContent = `Parabens! ${jogador_vencedor.nome} venceu!`
+                if(resultado_jogo.vencedor === "empate") {
+                    turno_jogador_div.textContent = "EmpaAaAateeeeeeeeeee!"
+                } else {
+                    turno_jogador_div.textContent = `Parabens! ${jogador_ativo.nome} venceu!`
+                }
                 return;
             }   
 
