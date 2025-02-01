@@ -1,19 +1,24 @@
-const biblioteca = [];
-
-function livro(titulo,autor,paginas,status){
-    this.titulo = titulo;
-    this.autor = autor;
-    this.paginas = paginas;
-    this.status = status;
+class Livro {
+    constructor(titulo,autor,paginas,status){
+        this.titulo = titulo;
+        this.autor = autor;
+        this.paginas = paginas;
+        this.status = status;
+    }
 }
-
-function adicionar_livro_a_biblioteca(titulo,autor,paginas,status) {
-    let novo_livro = new livro(titulo,autor,paginas,status);
-    biblioteca.push(novo_livro);
+class Biblioteca {
+    constructor(){
+        this.livros = [];
+    }
+    adicionar_livro_a_biblioteca(titulo,autor,paginas,status) {
+        let novo_livro = new Livro(titulo,autor,paginas,status);
+        this.livros.push(novo_livro);
+        console.log(`adicionado: ${titulo} ${autor} ${paginas} ${status}`)
+    }
 }
-
-adicionar_livro_a_biblioteca('Hobbit',"Tolkien",100,'Status de leitura: não lido');
-adicionar_livro_a_biblioteca('Hobbit 2',"Tolkien",150,'Status de leitura: não lido');
+const estante = new Biblioteca();
+estante.adicionar_livro_a_biblioteca('Hobbit',"Tolkien",100,'Status de leitura: não lido');
+estante.adicionar_livro_a_biblioteca('Hobbit 2',"Tolkien",150,'Status de leitura: não lido');
 
 const lista = document.querySelector('#livros');//lista esta no article
 
@@ -71,7 +76,7 @@ function criar_card(array_livro){
 
     lista.appendChild(fragmento_do_document);// .prepend iria inserir antes do primeiro child
 }
-criar_card(biblioteca);//inicia os cards exemplos pre-existentes
+criar_card(estante.livros);//inicia os cards exemplos pre-existentes
 
 
 const showBtn = document.getElementById("show-dialog");
@@ -102,28 +107,28 @@ btn_criar.addEventListener('click', (e) => {
     paginas_input = document.getElementById('paginas').value;
 
     if(modo_edicao) {
-        biblioteca[index_edicao].titulo = titulo_input;
-        biblioteca[index_edicao].autor = autor_input;
-        biblioteca[index_edicao].paginas = paginas_input;
+        estante.livros[index_edicao].titulo = titulo_input;
+        estante.livros[index_edicao].autor = autor_input;
+        estante.livros[index_edicao].paginas = paginas_input;
 
         modo_edicao = false;
         index_edicao = null;
     } else {
-        adicionar_livro_a_biblioteca(titulo_input, autor_input, paginas_input, 'Status de leitura: não lido');
+        estante.adicionar_livro_a_biblioteca(titulo_input, autor_input, paginas_input, 'Status de leitura: não lido');
     }
-    criar_card(biblioteca); // Re-renderiza os cards
+    criar_card(estante.livros); // Re-renderiza os cards
     dialog.close();
 });
 
 function remover_livro(e) {
     const index = Number(e.target.getAttribute('data-index'));
-    biblioteca.splice(index,1);
-    criar_card(biblioteca);
+    estante.livros.splice(index,1);
+    criar_card(estante.livros);
 }
 
 function atualizar_livro(e) {
     index_edicao = Number(e.target.getAttribute('data-index'));
-    const livro = biblioteca[index_edicao];
+    const livro = estante.livros[index_edicao];
 
     document.getElementById('titulo').value = livro.titulo;
     document.getElementById('autor').value = livro.autor;
@@ -140,7 +145,7 @@ function atualizar_livro(e) {
         livro.paginas = document.getElementById('paginas').value;
 
         
-        criar_card(biblioteca);
+        criar_card(estante.livros);
         dialog.close();
     };
 }
@@ -153,16 +158,16 @@ function adicionar_livro() {
         autor_input = document.getElementById('autor').value;
         paginas_input = document.getElementById('paginas').value;
 
-        adicionar_livro_a_biblioteca(titulo_input,autor_input,paginas_input, 'Status de leitura: não lido');
-        criar_card(biblioteca);
+        estante.adicionar_livro_a_biblioteca(titulo_input,autor_input,paginas_input, 'Status de leitura: não lido');
+        criar_card(estante.livros);
         dialog.close();
     };
 } 
 
 function toggle_status(e){
     index_edicao = Number(e.target.getAttribute('data-index'));
-    const livro = biblioteca[index_edicao];
+    const livro = estante.livros[index_edicao];
 
     livro.status = livro.status === 'Status de leitura: lido' ? 'Status de leitura: não lido' : 'Status de leitura: lido' ;
-    criar_card(biblioteca);
+    criar_card(estante.livros);
 }
